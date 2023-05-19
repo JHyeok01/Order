@@ -75,6 +75,15 @@ public class calculator {
             }else {
                 System.out.println("양배추 부족");
                 // 양배추 발주 수량
+                double orderCabQuantity = order.getBox() * 1.5;
+                System.out.println("양배추 발주 수량");
+                System.out.println(orderCabQuantity);
+
+                // 양배추 최소 발주량이 1ton임
+                if (orderCabQuantity < 1000){
+                    orderCabQuantity = 1000;
+                    System.out.println("바꿈");
+                }
 
 
                 // 입고는 월, 수, 금 오전 10:00 창고에 도착
