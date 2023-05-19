@@ -43,7 +43,7 @@ public class calculator {
         order.setId(1L);
         order.setOrderBy("테스트 주문자");
         order.setProduct("양배추즙");
-        order.setBox(100);
+        order.setBox(8212);
         order.setStatus("승인");
         order.setOrderDate(LocalDateTime.now());
 
@@ -77,12 +77,16 @@ public class calculator {
                 // 양배추 발주 수량
                 double orderCabQuantity = order.getBox() * 1.5;
                 System.out.println("양배추 발주 수량");
-                System.out.println(orderCabQuantity);
 
                 // 양배추 최소 발주량이 1ton임
                 if (orderCabQuantity < 1000){
+                    // 발주량이 1000보다 작을 때
                     orderCabQuantity = 1000;
-                    System.out.println("바꿈");
+                }else{
+                    // 발주량이 1000보다 클 때
+                    orderCabQuantity = Math.ceil(orderCabQuantity / 1000);
+                    System.out.println("실제 발주량");
+                    System.out.println(orderCabQuantity); // 단위 ton
                 }
 
 
@@ -141,13 +145,7 @@ public class calculator {
                         System.out.println(cabDeliveryDate);
                     }
 
-
-
                 }
-
-
-
-
 
                 // 이전 발주 건 조회하고 자재발주 수량이 오버 되는지 체크 해야됨
 
