@@ -11,8 +11,10 @@ public class MatOrderDTO {
 
     private Long matId;
 
+    private LocalDateTime orderDate;
+
     private LocalDateTime comDate;
 
-    private int leadTime;
+    private int quantity;
 
 }
