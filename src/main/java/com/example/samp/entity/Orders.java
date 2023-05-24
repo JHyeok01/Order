@@ -18,7 +18,7 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String orderBy;
+    private String orderFrom;
 
     private String product;
 

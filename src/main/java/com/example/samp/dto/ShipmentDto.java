@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ShipmentDTO {
+public class ShipmentDto {
     private Long id;
 
     private Long orderId;

@@ -5,11 +5,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class OrdersDTO {
+public class OrdersDto {
 
     private Long id;
 
-    private String orderBy;
+    private String orderFrom;
 
     private String product;
 

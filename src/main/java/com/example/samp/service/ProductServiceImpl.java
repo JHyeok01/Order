@@ -1,6 +1,6 @@
 package com.example.samp.service;
 
-import com.example.samp.dto.ProductDTO;
+import com.example.samp.dto.ProductDto;
 import com.example.samp.entity.Product;
 import com.example.samp.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class ProductServiceImpl implements ProductService{
         this.productRepository = productRepository;
     }
 
-    public void InsertData(){
+    public void insertData(){
         Product product = new Product();
         product.setLotId("양배추-02");
         product.setProduct("양배추즙");
@@ -26,8 +26,8 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductDTO findData() {
+    public ProductDto findData() {
 
-        return (ProductDTO) productRepository.findAll();
+        return (ProductDto) productRepository.findAll();
     }
 }

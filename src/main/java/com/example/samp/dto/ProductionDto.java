@@ -6,12 +6,10 @@ import com.example.samp.entity.PreProduct;
 import com.example.samp.entity.Product;
 import lombok.Data;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Data
-public class ProductionDTO {
+public class ProductionDto {
 
     private Long id;
 

@@ -3,7 +3,7 @@ package com.example.samp.dto;
 import lombok.Data;
 
 @Data
-public class LotDTO {
+public class LotDto {
     private Long id;
 
     private Long orderId;

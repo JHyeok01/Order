@@ -1,10 +1,10 @@
 package com.example.samp.service;
 
-import com.example.samp.dto.ProductDTO;
+import com.example.samp.dto.ProductDto;
 
 public interface ProductService {
 
-    public void InsertData();
+    public void insertData();
 
-    public ProductDTO findData();
+    public ProductDto findData();
 }

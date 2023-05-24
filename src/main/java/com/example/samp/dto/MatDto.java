@@ -3,7 +3,7 @@ package com.example.samp.dto;
 import lombok.Data;
 
 @Data
-public class MatDTO {
+public class MatDto {
     private Long id;
 
     private String matName;

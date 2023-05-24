@@ -1,8 +1,8 @@
 package com.example.samp.util;
 
-import com.example.samp.dto.MatDTO;
-import com.example.samp.dto.OrdersDTO;
-import com.example.samp.dto.ProductDTO;
+import com.example.samp.dto.MatDto;
+import com.example.samp.dto.OrdersDto;
+import com.example.samp.dto.ProductDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,51 +12,60 @@ public class calculator {
 
     public static void main(String[] args) {
 
-
-        OrdersDTO order = new OrdersDTO();
-        ProductDTO product = new ProductDTO();
-        MatDTO mat = new MatDTO();
-        MatDTO matPau = new MatDTO();
-        MatDTO matBox = new MatDTO();
-        MatDTO matCol = new MatDTO();
-        MatDTO matStick = new MatDTO();
-        List<MatDTO> matDTOList = new ArrayList<>();
-
+        OrdersDto order = new OrdersDto();
+        ProductDto product = new ProductDto();
+        MatDto mat = new MatDto();
+        MatDto matPau = new MatDto();
+        MatDto matBox = new MatDto();
+        MatDto matCol = new MatDto();
+        MatDto matStick = new MatDto();
+        List<MatDto> matDtoList = new ArrayList<>();
 
         // 수주
         order.setId(1L);
-        order.setOrderBy("테스트 주문자");
-        order.setProduct("양배추즙");
-        order.setBox(100);
+        order.setProduct("석류젤리스틱");
+        order.setBox(10000);
         order.setStatus("승인");
         order.setOrderDate(LocalDateTime.now());
 
         // 원자재 재고
-        mat.setMatName("양배추");
+        switch (order.getProduct()){
+            case "양배추즙" :
+                mat.setMatName("양배추");
+                break;
+            case "흑마늘즙" :
+                mat.setMatName("흑마늘");
+                break;
+            case "석류젤리스틱" :
+                mat.setMatName("석류");
+                break;
+            case "매실젤리스틱" :
+                mat.setMatName("매실");
+                break;
+        }
         mat.setMatNum(1);
 
         matPau.setMatName("파우치");
-        matPau.setMatNum(300);
+        matPau.setMatNum(0);
 
         matStick.setMatName("스틱파우치");
-        matStick.setMatNum(123);
+        matStick.setMatNum(0);
 
         matBox.setMatName("box");
-        matBox.setMatNum(500);
+        matBox.setMatNum(0);
 
         matCol.setMatName("콜라겐");
-        matCol.setMatNum(123);
+        matCol.setMatNum(0);
 
-
-        matDTOList.add(mat); // 원자재
-        matDTOList.add(matPau); // 파우치
-        matDTOList.add(matBox); // 박스
-        matDTOList.add(matCol); // 콜라겐
+        matDtoList.add(mat); // 원자재
+        matDtoList.add(matPau); // 파우치
+        matDtoList.add(matBox); // 박스
+        matDtoList.add(matCol); // 콜라겐
 
 
         // 완제품 재고
         product.setProduct(order.getProduct());
-        product.setNum(90);
+        product.setNum(10);
 
         System.out.println("==================================");
         System.out.println("수주 제품: " + order.getProduct());
@@ -66,96 +75,79 @@ public class calculator {
 
         // 생산 해야되는 수량
         int quantityToProduce = order.getBox() - product.getNum();
+        // 양배추
+        double productionCapacityCab = matDtoList.get(0).getMatNum() * 2 * 0.8 / 0.08 / 30;
+        // 흑마늘
+        double productionCapacityGal = matDtoList.get(0).getMatNum() * 4 * 0.6 / 0.02 / 30;
+        // 젤리
+        double productionCapacityJel = matDtoList.get(0).getMatNum() / 0.005 / 25;
+        // 콜라겐
+        double productionCapacityCol = matDtoList.get(3).getMatNum() / 0.002 / 25;
+        // 파우치
+        double productionCapacityPau = matPau.getMatNum();
+        // 스틱 파우치
+        double productionCapacityStick = matStick.getMatNum();
+        // 포장 박스
+        double productionCapacityBox = matBox.getMatNum() - product.getNum(); // 가진 box - 완제품
+
 
         // 수주량 > 완재품 재고
         if (order.getBox() > product.getNum()) {
 
-            double productionCapacity;
+            System.out.println(mat.getMatName() + "재고: " + (int)mat.getMatNum() + "kg");
 
             if (order.getProduct().equals("양배추즙") || order.getProduct().equals("흑마늘즙")) {
-                // 양배추즙 생산 가능 수량 (box)
                 if (order.getProduct().equals("양배추즙")) {
-                    productionCapacity = matDTOList.get(0).getMatNum() * 2 * 0.8 / 0.08 / 30;
-                    System.out.println("양배추즙 생산 가능 수량(box): " + (int) productionCapacity);
+                    // 양배추즙
+                    producible(order, mat, productionCapacityCab, product, quantityToProduce);
                 } else {
-                    // 흑마늘즙 생산 가능 수량 (box)
-                    productionCapacity = matDTOList.get(0).getMatNum() * 4 * 0.6 / 0.02 / 30;
-//                    productionCapacity = (productionCapacity + product.getNum()) - order.getBox();
-                    System.out.println("흑마늘즙 생산 가능 수량(box): " + (int) productionCapacity);
+                    // 흑마늘즙
+                    producible(order, mat, productionCapacityGal, product, quantityToProduce);
                 }
+                // 파우치 가진거
+                producible(order, matPau, productionCapacityPau, product, quantityToProduce * 30);
 
-                producible(order, mat, productionCapacity, product, quantityToProduce);
-
-                // 파우치 가진거 > 생산 해야 되는 수량 (ea)
-                if (matDTOList.get(1).getMatNum() >= quantityToProduce * 30) {
-                    System.out.println("파우치 충분 자재량: " + (int) matDTOList.get(1).getMatNum());
-                } else {
-                    // 파우치 발주
-                    List<Integer> orderPau = orderVolume(order, matPau, product);
-                    for (int i : orderPau) {
-                        System.out.println("파우치 발주량: " + i + "ea");
-                    }
-                    orderDelivery(matPau);
-                }
-                // 박스 재고 확인
-                double productionCapacityBox = order.getBox();
                 producible(order, matBox, productionCapacityBox, product, quantityToProduce);
 
             } else {
-                // 석류, 매실 젤리스틱 생산 가능 수량 (box)
-                productionCapacity = matDTOList.get(0).getMatNum() / 0.005 / 25;
-                System.out.println(productionCapacity);
+                // 젤리 자재 확인 없으면 발주
+                producible(order, mat, productionCapacityJel, product, quantityToProduce);
 
-                producible(order, mat, productionCapacity, product, quantityToProduce);
-
-                // 콜라겐 자재 확인
-                double productionCapacityCol = matDTOList.get(3).getMatNum() / 0.002 / 25;
-
+                // 콜라겐 자재 확인 없으면 발주
                 producible(order, matCol, productionCapacityCol, product, quantityToProduce);
 
-                // 파우치 > 생산 가능 수량 (ea)
-                if (matDTOList.get(1).getMatNum() >= quantityToProduce * 25) {
-                    System.out.println("스틱 파우치 충분 자재량: " + (int) matDTOList.get(1).getMatNum());
-                } else {
-                    // 스틱 파우치 발주
-                    List<Integer> orderStick = orderVolume(order, matStick, product);
-                    for (int i : orderStick) {
-                        System.out.println("스틱파우치 발주량: " + i + "ea");
-                    }
-                    orderDelivery(matStick);
-                }
-                // 박스 재고 확인
-                double productionCapacityBox = order.getBox();
-                producible(order, matBox, productionCapacityBox, product, quantityToProduce);
+                // 파우치 자재 확인 없으면 발주
+                producible(order, matStick, productionCapacityStick, product, quantityToProduce * 25);
 
+                // 박스 자재 확인 없으면 발주
+                producible(order, matBox, productionCapacityBox, product, quantityToProduce);
             }
 
             // 이전 발주 건 조회하고 자재발주 수량이 오버 되는지 체크 해야됨
 
         } else { // 완제품이 충분할경우
             System.out.println("출하");
-            // 출하 구현
         }
 
         System.out.println("==================================");
 
     }
 
-    public static void producible(OrdersDTO order, MatDTO mat, double productionCapacity, ProductDTO product, int quantityToProduce) {
+    public static void producible(OrdersDto order, MatDto mat, double productionCapacity, ProductDto product, int quantityToProduce) {
         if (productionCapacity >= quantityToProduce) { // 여기 수정함
-            System.out.println(mat.getMatName() + " 자재 충분 자재량: " + (int) mat.getMatNum());
+            System.out.println(mat.getMatName() + " 자재 충분 / 자재량: " + (int) mat.getMatNum());
 
         } else {
             List<Integer> orderMat = orderVolume(order, mat, product);
             for (int i : orderMat) {
-                System.out.println(mat.getMatName() + " 발주량 " + i + "kg");
+                System.out.println(mat.getMatName() + " 발주량 " + i);
             }
-            orderDelivery(mat);
+//            LocalDateTime deliveryDate = orderDelivery(mat);
+//            System.out.println("예상 입고일: " + deliveryDate);
         }
     }
 
-
-    public static List<Integer> orderVolume(OrdersDTO order, MatDTO mat, ProductDTO product) {
+    public static List<Integer> orderVolume(OrdersDto order, MatDto mat, ProductDto product) {
 
         List<Integer> orderQuantityList = new ArrayList<>();
 
@@ -244,6 +236,7 @@ public class calculator {
                         if (orderMax > 5000) {
                             orderMax -= 5000;
                             orderQuantityList.add(5000);
+
                         } else if (0 < orderMax) {
                             orderQuantityList.add((int) orderMax);
                             orderMax -= orderMax;
@@ -299,8 +292,7 @@ public class calculator {
         return orderQuantityList;
     }
 
-
-    public static LocalDateTime orderDelivery(MatDTO mat) {
+    public static LocalDateTime orderDelivery(MatDto mat) {
         // 입고는 월, 수, 금 오전 10:00 창고에 도착
 
         LocalDateTime orderTime = LocalDateTime.now(); // 원자재 발주 넣은 시간
@@ -378,6 +370,7 @@ public class calculator {
         }
         return deliveryDate;
     }
+
 
     public static LocalDateTime getLocalDateTimeBefore2Day(LocalDateTime orderTime) {
         LocalDateTime deliveryDate;

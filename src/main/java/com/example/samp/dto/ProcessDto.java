@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ProcessDTO {
+public class ProcessDto {
     private String name;
 
     private String lotId;
